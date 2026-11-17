@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#17152f">
+<title>Mindset Battle | Positive Thinking</title>
+<style>
+:root{--bg:#111126;--panel:#1d1c3b;--panel2:#28264c;--ink:#f7f5ff;--muted:#c0bddc;--pink:#ff6b9d;--cyan:#66e1dc;--yellow:#ffd166;--green:#74e0a1;--red:#ff8585}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 15% 10%,#30265a 0,transparent 35%),radial-gradient(circle at 90% 90%,#173b51 0,transparent 32%),var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;display:flex;justify-content:center;padding:20px}
+main{width:min(720px,100%);margin:auto}.brand{text-align:center;margin:8px 0 22px}.brand .tag{color:var(--cyan);font-size:.8rem;letter-spacing:2px;font-weight:800}.brand h1{font-size:clamp(2rem,8vw,3.4rem);line-height:1.1;margin:8px 0}.brand h1 span{color:var(--pink)}.brand p{color:var(--muted);margin:8px 0}
+.card{background:linear-gradient(145deg,rgba(40,38,76,.97),rgba(27,26,56,.97));border:1px solid #49466f;border-radius:24px;padding:clamp(18px,5vw,30px);box-shadow:0 18px 55px #0005}
+h2{margin:0 0 12px;font-size:1.45rem}.muted{color:var(--muted);line-height:1.7}.players{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}.field label{display:block;font-size:.9rem;color:var(--muted);margin:0 0 6px}.field input{width:100%;padding:13px;border-radius:12px;border:1px solid #57537e;background:#15142d;color:white;font:inherit;outline:none}.field input:focus{border-color:var(--cyan)}
+button{border:0;border-radius:14px;padding:14px 18px;font:inherit;font-weight:800;cursor:pointer;transition:.15s}button:active{transform:scale(.98)}.primary{width:100%;background:linear-gradient(90deg,var(--pink),#b18cff);color:#20142e}.secondary{background:#39365f;color:white}.tiny{padding:9px 12px;font-size:.85rem}.hidden{display:none!important}
+.rules{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.pill{background:#34315b;border:1px solid #514d7c;border-radius:999px;padding:7px 12px;color:#e5e1ff;font-size:.85rem}
+.topline{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:18px;flex-wrap:wrap}.progress{height:9px;background:#111027;border-radius:99px;overflow:hidden;margin:12px 0 20px}.progress div{height:100%;background:linear-gradient(90deg,var(--cyan),var(--pink));width:0%;transition:width .3s}
+.qmeta{color:var(--cyan);font-weight:800;font-size:.9rem}.question{font-size:clamp(1.2rem,4vw,1.65rem);line-height:1.5;margin:13px 0 20px}.answers{display:grid;gap:11px}.answer{background:#302d57;color:white;text-align:right;border:1px solid #514d7c;width:100%;font-weight:600}.answer:hover:not(:disabled){background:#403b70;border-color:var(--cyan)}.answer.correct{background:#174b3a;border-color:var(--green)}.answer.wrong{background:#5a2939;border-color:var(--red)}.answer:disabled{cursor:default;opacity:1}
+.feedback{margin-top:16px;padding:14px;border-radius:14px;background:#15142d;color:var(--muted);line-height:1.7}.feedback.good{border:1px solid #3b9b72;color:#b9f5d2}.feedback.bad{border:1px solid #a44e65;color:#ffd0da}
+.scoreline{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:18px;color:var(--muted)}.scoreline strong{color:var(--yellow);font-size:1.15rem}
+table{width:100%;border-collapse:collapse;margin:18px 0}th,td{padding:12px 8px;border-bottom:1px solid #48456d;text-align:right}th{color:var(--cyan)}td:last-child,th:last-child{text-align:left}.winner{text-align:center;font-size:1.3rem;margin:10px 0 20px;color:var(--yellow)}.note{font-size:.82rem;color:var(--muted);text-align:center;margin-top:16px}
+@media(max-width:460px){body{padding:12px}.players{grid-template-columns:1fr}.card{border-radius:19px}.topline{align-items:flex-start}}
+</style>
+</head>
+<body>
+<main>
+<header class="brand">
+ <div class="tag">TEAM CHALLENGE • 5 PLAYERS • 10 QUESTIONS</div>
+ <h1>MINDSET <span>BATTLE</span></h1>
+ <p>Positive Thinking Edition — فكّر بإيجابية واكسب نقاط فريقك!</p>
+</header>
+<section class="card" id="setup">
+ <h2>جهّزوا التحدّي 👀</h2>
+ <p class="muted">اكتبوا أسماء الخمسة لاعبين. كل لاعب هيلعب سؤالين على نفس الموبايل، وبعد كل إجابة هيتسجل سكور اللاعب تلقائيًا.</p>
+ <div class="players" id="nameFields"></div>
+ <div class="rules"><span class="pill">5 Players</span><span class="pill">2 Questions Each</span><span class="pill">10 Points / Question</span><span class="pill">20 Points Max</span></div>
+ <button class="primary" id="start">ابدأ اللعبة 🚀</button>
+ <p class="note">مرّروا الموبايل للاعب التالي عند ظهور اسمه.</p>
+</section>
+<section class="card hidden" id="game">
+ <div class="topline"><span class="pill" id="playerPill">Player 1</span><span class="qmeta" id="round">Question 1 / 10</span></div>
+ <div class="progress"><div id="bar"></div></div>
+ <div class="qmeta" id="topic">POSITIVE THINKING</div>
+ <div class="question" id="question"></div>
+ <div class="answers" id="answers"></div>
+ <div id="feedback" class="feedback hidden" aria-live="polite"></div>
+ <div class="scoreline"><span>Current player's score</span><strong id="score">0 / 20</strong></div>
+ <button class="primary hidden" id="next" style="margin-top:18px">السؤال التالي ←</button>
+</section>
+<section class="card hidden" id="results">
+ <h2>🏆 Final Leaderboard</h2>
+ <div class="winner" id="winner"></div>
+ <table><thead><tr><th>Player</th><th>Score</th></tr></thead><tbody id="ranking"></tbody></table>
+ <p class="muted">شكرًا لمشاركتكم! افتحوا جولة جديدة لو حابين تعيدوا التحدّي.</p>
+ <button class="primary" id="restart">العبوا من جديد ↻</button>
+</section>
+</main>
+<script>
+const questions = [
+ {topic:"OPTIMISM",q:"What does positive thinking mainly encourage us to do?",a:["Ignore every problem","Look for solutions and opportunities","Expect everything to be easy","Avoid making decisions"],c:1,e:"Positive thinking means facing difficulties with hope and looking for possible solutions."},
+ {topic:"SELF-CONFIDENCE",q:"Which action shows self-confidence?",a:["Giving up before trying","Comparing yourself with everyone","Believing you can improve through effort","Avoiding every challenge"],c:2,e:"Self-confidence includes believing in your abilities and knowing that you can develop them."},
+ {topic:"PROBLEM-SOLVING",q:"When you face a difficult situation, a positive thinker should…",a:["Focus only on what went wrong","Search for possible solutions","Blame other people","Pretend the problem does not exist"],c:1,e:"Positive thinking does not mean ignoring problems; it means dealing with them constructively."},
+ {topic:"SIX THINKING HATS",q:"Which hat represents benefits, opportunities, and positive points?",a:["Black Hat","Red Hat","Yellow Hat","Blue Hat"],c:2,e:"The Yellow Hat focuses on positive thinking, benefits, opportunities, and hope."},
+ {topic:"DEVELOPING POSITIVE THINKING",q:"Which habit can help develop positive thinking?",a:["Learning from difficult experiences","Avoiding all feedback","Focusing only on mistakes","Refusing to ask for help"],c:0,e:"Learning from experiences helps us grow and respond to challenges more positively."},
+ {topic:"CHARACTERISTICS",q:"A positive thinker usually sees mistakes as…",a:["Proof that success is impossible","A reason to stop trying","A chance to learn and improve","Something to hide forever"],c:2,e:"Positive thinkers learn from mistakes and believe their abilities can improve."},
+ {topic:"ATTRIBUTION THEORY",q:"Attribution Theory helps us understand…",a:["The colors of the Six Thinking Hats","The causes of events and results","How to avoid every challenge","Why people must always agree"],c:1,e:"Attribution Theory is concerned with how people explain the causes of events and outcomes."},
+ {topic:"BENEFITS",q:"Which is a possible benefit of positive thinking?",a:["More confidence and better relationships","Never experiencing stress","Avoiding responsibility","Guaranteed success every time"],c:0,e:"Positive thinking can support confidence, relationships, and coping with difficulties."},
+ {topic:"DAILY LIFE",q:"You receive a lower mark than expected. What is the most positive response?",a:["Decide you will never succeed","Blame the whole class","Review your mistakes and plan how to improve","Stop studying the subject"],c:2,e:"A positive response accepts what happened, learns from it, and makes a plan to improve."},
+ {topic:"REALISTIC POSITIVITY",q:"True or False: Positive thinking means life will always be easy.",a:["True","False"],c:1,e:"False. Positive thinking does not make life perfect; it helps us face real challenges with hope and effort."}
+];
+const $=id=>document.getElementById(id);
+let players=[], order=[], index=0, scores=[];
+for(let i=0;i<5;i++){const d=document.createElement('div');d.className='field';d.innerHTML=`<label for="p${i}">Player ${i+1}</label><input id="p${i}" maxlength="18" value="Player ${i+1}" autocomplete="off">`;$('nameFields').appendChild(d)}
+function show(id){['setup','game','results'].forEach(x=>$(x).classList.toggle('hidden',x!==id))}
+function begin(){players=Array.from({length:5},(_,i)=>$('p'+i).value.trim()||`Player ${i+1}`);scores=players.map(()=>0);order=[];for(let p=0;p<5;p++){order.push(p,p)}index=0;show('game');render()}
+function render(){const p=order[index],q=questions[index];$('playerPill').textContent=`${players[p]}’s turn`; $('round').textContent=`Question ${index+1} / 10`; $('bar').style.width=`${index/10*100}%`; $('topic').textContent=q.topic; $('question').textContent=q.q; $('score').textContent=`${scores[p]} / 20`; $('feedback').className='feedback hidden';$('feedback').textContent='';$('next').classList.add('hidden');$('answers').innerHTML='';q.a.forEach((a,i)=>{const b=document.createElement('button');b.className='answer';b.textContent=`${String.fromCharCode(65+i)}. ${a}`;b.onclick=()=>choose(i);$('answers').appendChild(b)})}
+function choose(choice){const q=questions[index],p=order[index],buttons=[...$('answers').children];buttons.forEach((b,i)=>{b.disabled=true;if(i===q.c)b.classList.add('correct');if(i===choice&&choice!==q.c)b.classList.add('wrong')});const good=choice===q.c;if(good)scores[p]+=10;$('score').textContent=`${scores[p]} / 20`;$('feedback').textContent=(good?'Correct! +10 points. ':'Not quite. +0 points. ')+q.e;$('feedback').className=`feedback ${good?'good':'bad'}`;$('next').textContent=index===9?'عرض النتيجة 🏆':'التالي — مرّروا الموبايل';$('next').classList.remove('hidden')}
+function advance(){index++;if(index>=10){finish();return}render()}
+function finish(){show('results');const sorted=players.map((name,i)=>({name,score:scores[i],i})).sort((a,b)=>b.score-a.score);const top=sorted[0].score;const winners=sorted.filter(x=>x.score===top).map(x=>x.name);$('winner').textContent=top===0?'Great effort, everyone!':winners.length>1?`🤝 تعادل بين ${winners.join(' و ')}`:`🎉 الفائز/ة: ${winners[0]}!`;$('ranking').innerHTML='';sorted.forEach((x,n)=>{const tr=document.createElement('tr');const a=document.createElement('td'),b=document.createElement('td');a.textContent=`${n===0?'🥇 ':''}${x.name}`;b.textContent=`${x.score} / 20`;tr.append(a,b);$('ranking').appendChild(tr)})}
+$('start').onclick=begin;$('next').onclick=advance;$('restart').onclick=()=>{show('setup')};
+</script>
+</body>
+</html>
